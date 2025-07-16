@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gender Reveal Scratch</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: #fff5f5;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0;
+    }
+    h2 {
+      margin-top: 0.3rem;
+    }
+    .container {
+      position: relative;
+      width: 300px;
+      margin: auto;
+    }
+    .message {
+      font-size: 1.5rem;
+      color: #000;
+      position: absolute;
+      top: 110px;
+      left: 0;
+      right: 0;
+      font-weight: bold;
+    }
+    canvas {
+      position: absolute;
+      top: 60px;
+      left: 0;
+      border-radius: 50%;
+    }
+    .heart-bg {
+      width: 100%;
+      margin-top: 30px;
+    }
+    .try-again {
+      margin-top: 320px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background: #fff;
+      border: 2px solid #000;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Boy or Girl?</h1>
+  <h2>💖 Scratch to reveal! 💖</h2>
+
+  <div class="container">
+    <img src="https://i.imgur.com/YsWpF7E.png" class="heart-bg" alt="Heart Background" />
+    <div class="message">It's a boy 💙</div>
+    <canvas width="300" height="300" id="scratch"></canvas>
+  </div>
+
+  <button class="try-again" onclick="location.reload()">TRY AGAIN</button>
+
+  <script>
+    const canvas = document.getElementById('scratch');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+
+    function drawHeartMask() {
+      ctx.fillStyle = 'gold';
+      ctx.beginPath();
+      ctx.moveTo(150, 90);
+      ctx.bezierCurveTo(130, 30, 20, 80, 150, 220);
+      ctx.bezierCurveTo(280, 80, 170, 30, 150, 90);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    drawHeartMask();
+
+    function clearScratch(x, y) {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.arc(x, y, 20, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    canvas.addEventListener('mousedown', () => isDrawing = true);
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseleave', () => isDrawing = false);
+    canvas.addEventListener('mousemove', (e) => {
+      if (!isDrawing) return;
+      const rect = canvas.getBoundingClientRect();
+      clearScratch(e.clientX - rect.left, e.clientY - rect.top);
+    });
+
+    canvas.addEventListener('touchmove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      const x = touch.clientX - rect.left;
+      const y = touch.clientY - rect.top;
+      clearScratch(x, y);
+    });
+  </script>
+
+</body>
+</html>
